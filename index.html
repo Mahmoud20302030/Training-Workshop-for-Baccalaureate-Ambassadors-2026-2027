@@ -1,0 +1,1073 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة سفراء البكالوريا المصرية - أ. محمود محمد</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
+        
+        *, *::before, *::after { box-sizing: border-box; }
+        
+        html, body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #010408;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            max-width: 100%;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        :root {
+            --primary-color: #00d2ff;
+            --secondary-color: #005cff;
+            --primary-glow: rgba(0, 210, 255, 0.6);
+            --bg-dark: #010408;
+            --surface-dark: rgba(2, 5, 10, 0.98);
+        }
+
+        /* حماية الزاوية السفلية اليمنى من أي نصوص أو أزرار */
+        .bottom-right-clear-zone {
+            position: fixed; bottom: 0; right: 0; width: 150px; height: 150px; z-index: 99999; pointer-events: none;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 15px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .text-cyan { color: var(--primary-color); }
+        .text-blue-light { color: #66b3ff; }
+        .bg-cyan { background-color: var(--primary-color); color: #000; }
+        
+        .btn-cyan {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            color: #fff; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 0 15px var(--primary-glow); border: none; cursor: pointer;
+        }
+        .btn-cyan:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 25px var(--primary-glow); }
+        .btn-cyan:disabled { background: #333; box-shadow: none; cursor: not-allowed; color: #888; }
+
+        /* إطار ليزر احترافي */
+        .laser-frame {
+            position: relative; padding: 3rem; background: rgba(0, 20, 40, 0.8); border-radius: 20px; z-index: 1;
+        }
+        .laser-frame::before {
+            content: ''; position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #00d2ff, #005cff, #00d2ff, #005cff); z-index: -1;
+            border-radius: 22px; background-size: 400%; animation: laser-glow 10s linear infinite; filter: blur(8px);
+        }
+        .laser-frame::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 10, 25, 0.95); z-index: -1; border-radius: 20px;
+        }
+        @keyframes laser-glow { 0% { background-position: 0 0; } 50% { background-position: 400% 0; } 100% { background-position: 0 0; } }
+
+        /* صناديق الرحلة التدريبية */
+        .gift-box {
+            position: relative; background: linear-gradient(135deg, rgba(0,92,255,0.1), rgba(0,210,255,0.1));
+            border: 2px solid rgba(0,210,255,0.3); border-radius: 15px; padding: 2rem; text-align: center;
+            cursor: pointer; transition: all 0.4s ease; overflow: hidden;
+        }
+        .gift-box.locked { filter: grayscale(100%) opacity(0.5); cursor: not-allowed; border-color: #444; background: rgba(255,255,255,0.02); }
+        .gift-box.unlocked { box-shadow: 0 0 20px var(--primary-glow); animation: float-box 3s ease-in-out infinite; }
+        .gift-box.completed { border-color: #00ff88; box-shadow: 0 0 15px rgba(0, 255, 136, 0.3); background: rgba(0, 255, 136, 0.05); }
+        .gift-box:hover.unlocked { transform: scale(1.05); }
+        .gift-icon { font-size: 3.5rem; background: -webkit-linear-gradient(45deg, var(--primary-color), #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1rem; }
+        @keyframes float-box { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        /* النوافذ المنبثقة */
+        .custom-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); z-index: 1000;
+            justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s;
+        }
+        .custom-modal.active { display: flex; opacity: 1; animation: fadeIn 0.3s; }
+        .modal-content {
+            background: var(--surface-dark); border: 2px solid var(--primary-color); border-radius: 20px;
+            padding: 30px; max-width: 850px; width: 95%; max-height: 90vh; overflow-y: auto; text-align: right;
+            box-shadow: 0 0 40px var(--primary-glow); transform: scale(0.9); transition: transform 0.3s;
+        }
+        .custom-modal.active .modal-content { transform: scale(1); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .input-field {
+            width: 100%; padding: 1rem; border-radius: 0.75rem; background: rgba(0, 0, 0, 0.5); color: white;
+            border: 1px solid rgba(0, 210, 255, 0.3); transition: all 0.3s;
+        }
+        .input-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow); }
+
+        .progress-container { width: 100%; background: #222; border-radius: 10px; height: 10px; overflow: hidden; margin-top: 1rem; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); width: 0%; transition: width 0.5s ease; }
+
+        /* الشهادة */
+        .certificate-container {
+            background: #fff; color: #000; padding: 40px; border: 15px solid transparent; border-image: linear-gradient(45deg, #005cff, #00d2ff) 1;
+            text-align: center; position: relative; background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="none" stroke="%2300d2ff" stroke-width="1" stroke-dasharray="10 10"/></svg>');
+        }
+        .view-section { display: none; animation: fadeIn 0.5s; width: 100%; }
+        .view-section.active { display: block; }
+
+        /* الفوتر السيادي الأزرق والسماوي */
+        .footer-wrapper {
+            padding: 80px 20px; background: rgba(2, 5, 10, 0.98); border-top: 3px solid var(--primary-color); 
+            display: flex; justify-content: center; align-items: center; margin-top: auto;
+            position: relative; overflow: hidden; height: 550px; flex-shrink: 0; box-shadow: 0 -15px 50px rgba(0,0,0,0.8);
+        }
+        .circle-container { position: relative; width: 480px; height: 480px; display: flex; justify-content: center; align-items: center; }
+        .rotating-svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: rotateText 22s linear infinite; z-index: 2; }
+        @keyframes rotateText { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .text-path-style { font-size: 20px; fill: #ffffff; font-family: 'Arial Black', Impact, sans-serif; letter-spacing: 6px; filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.9)); }
+        .name-highlight { font-size: 28px; font-weight: 900; fill: var(--primary-color); letter-spacing: 4px; text-transform: uppercase; }
+        .center-prayer {
+            position: relative; width: 340px; text-align: center; font-size: 2.2rem; font-weight: 900; color: var(--primary-color); line-height: 1.8; z-index: 10; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-shadow: 0 1px 0 #0099cc, 0 2px 0 #0077b3, 0 3px 0 #005599, 0 4px 0 #003366, 0 5px 0 #002244, 0 10px 20px rgba(0,0,0,0.9), 0 0 40px var(--primary-glow);
+        }
+        .center-prayer::before { content: "🦅"; font-size: 2.2rem; margin-bottom: 15px; opacity: 0.95; filter: drop-shadow(0 0 10px var(--primary-glow)); }
+        .center-prayer::after { content: "🦅"; font-size: 2.2rem; margin-top: 15px; opacity: 0.95; filter: drop-shadow(0 0 10px var(--primary-glow)); transform: scaleX(-1); }
+
+        /* الطباعة */
+        @media print {
+            body * { visibility: hidden; }
+            #certificateArea, #certificateArea * { visibility: visible; }
+            #certificateArea { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
+            .btn-cyan { display: none !important; }
+            @page { size: landscape; margin: 0; }
+        }
+
+        /* تنسيقات الشرح في الوحدة */
+        .unit-img { max-width: 100%; height: auto; border-radius: 12px; margin: 15px auto; border: 2px solid var(--primary-color); box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: block; }
+        .unit-term { background: rgba(0, 210, 255, 0.1); border-right: 4px solid var(--primary-color); padding: 15px; margin-bottom: 15px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="bottom-right-clear-zone"></div>
+
+    <!-- نافذة التدريب (المحتوى) -->
+    <div id="trainingModal" class="custom-modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-6 border-b border-cyan pb-4">
+                <h2 id="trainingTitle" class="text-3xl font-bold text-cyan">العنوان</h2>
+                <button onclick="closeTrainingModal()" class="text-gray-400 hover:text-white transition text-2xl"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="trainingBody" class="text-lg leading-loose text-gray-200 mb-8 space-y-4">
+                <!-- يُملأ برمجياً -->
+            </div>
+            <div class="text-center">
+                <button id="completeUnitBtn" onclick="completeCurrentUnit()" class="btn-cyan px-10 py-3 rounded-full text-lg w-full md:w-auto shadow-lg">
+                    <i class="fas fa-check-double mr-2"></i> تأكيد إتمام التدريب
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة التنبيهات -->
+    <div id="alertModal" class="custom-modal">
+        <div class="modal-content !max-w-md text-center">
+            <div class="text-5xl text-cyan mb-4"><i class="fas fa-info-circle"></i></div>
+            <h2 id="alertTitle" class="text-2xl font-bold text-cyan mb-2">تنبيه</h2>
+            <p id="alertMessage" class="text-lg mb-6 text-gray-300"></p>
+            <button onclick="closeAlertModal()" class="btn-cyan px-8 py-2 rounded-full w-full font-bold">حسناً</button>
+        </div>
+    </div>
+
+    <!-- شريط التنقل -->
+    <nav id="mainNav" class="glass-panel sticky top-0 z-50 p-4 mx-4 mt-4 mb-2 rounded-xl flex flex-wrap justify-between items-center gap-4 hidden">
+        <div class="text-cyan font-black text-2xl tracking-wider"><i class="fas fa-microchip mr-2"></i> Gweryax</div>
+        <div class="flex gap-4 flex-wrap text-sm md:text-base">
+            <button onclick="navigate('home')" class="hover:text-cyan transition font-bold"><i class="fas fa-home"></i> الرئيسية</button>
+            <button onclick="navigate('journey')" class="hover:text-cyan transition font-bold"><i class="fas fa-route"></i> رحلة التدريب</button>
+            <button onclick="navigate('quiz')" id="navQuizBtn" class="hover:text-cyan transition font-bold text-gray-500"><i class="fas fa-lock"></i> الاختبار</button>
+            <button onclick="navigate('admin')" class="hover:text-cyan transition font-bold"><i class="fas fa-shield-alt"></i> الإدارة</button>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 mb-10 w-full">
+        
+        <!-- قسم التسجيل الإلزامي -->
+        <section id="registration" class="view-section active flex flex-col justify-center items-center mt-10">
+            <div class="glass-panel p-8 md:p-12 max-w-lg w-full relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary-color to-primary-color"></div>
+                <div class="text-center mb-8">
+                    <i class="fas fa-user-graduate text-5xl text-cyan mb-4"></i>
+                    <h1 class="text-3xl font-black text-white">تسجيل المتدربين</h1>
+                    <p class="text-gray-400 mt-2">منصة إعداد سفراء البكالوريا المصرية</p>
+                </div>
+                
+                <form id="regForm" onsubmit="handleRegistration(event)" class="space-y-5 text-right">
+                    <div>
+                        <label class="block text-cyan mb-2 font-bold"><i class="fas fa-id-card ml-1"></i> كود المعلم</label>
+                        <input type="number" id="regCode" required class="input-field" placeholder="الكود التعريفي">
+                    </div>
+                    <div>
+                        <label class="block text-cyan mb-2 font-bold"><i class="fas fa-user ml-1"></i> الاسم رباعي</label>
+                        <input type="text" id="regName" required class="input-field" placeholder="مطابق لصحيفة الأحوال">
+                    </div>
+                    <div>
+                        <label class="block text-cyan mb-2 font-bold"><i class="fas fa-school ml-1"></i> المدرسة</label>
+                        <input type="text" id="regSchool" required class="input-field" placeholder="جهة العمل">
+                    </div>
+                    <div>
+                        <label class="block text-cyan mb-2 font-bold"><i class="fas fa-envelope ml-1"></i> البريد الإلكتروني الموحد</label>
+                        <input type="email" id="regEmail" required class="input-field" placeholder="example@moe.edu.eg">
+                    </div>
+                    <button type="submit" class="btn-cyan w-full py-4 text-xl rounded-xl mt-4 shadow-lg">بدء الرحلة التدريبية <i class="fas fa-rocket mr-2"></i></button>
+                </form>
+            </div>
+        </section>
+
+        <!-- قسم الرئيسية والإهداء -->
+        <section id="home" class="view-section text-center mt-6">
+            <div class="glass-panel p-6 md:p-10 max-w-5xl mx-auto">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2300d2ff'/><text x='50' y='55' font-size='20' text-anchor='middle' fill='%23000' font-weight='bold'>Gweryax</text></svg>" alt="Logo" class="w-24 h-24 mx-auto mb-6">
+                <h1 class="text-4xl md:text-5xl font-black text-cyan mb-4 leading-tight">الورشة التدريبية الشاملة<br>لإعداد سفراء البكالوريا المصرية</h1>
+                <p class="text-xl text-gray-300 mb-10">مرحباً بك أستاذ/ة <strong id="welcomeName" class="text-white border-b border-cyan pb-1"></strong></p>
+                
+                <!-- الإهداء بإطار الليزر الاحترافي -->
+                <div class="laser-frame my-10 max-w-4xl mx-auto">
+                    <h2 class="text-4xl font-bold text-cyan mb-4"><i class="fas fa-award"></i> إهـــداء وتــقــديــر</h2>
+                    <p class="text-lg text-yellow-400 font-bold mb-8 tracking-wide">"نماذج من التدريبات والإنجازات والتكريمات"</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>
+                            <p class="text-lg text-gray-300 mb-2">تحت إشراف الموجه العام</p>
+                            <p class="text-xl font-black text-white">الأستاذ / مهدي السعيد محمد عبدالله</p>
+                        </div>
+                        <div>
+                            <p class="text-lg text-gray-300 mb-2">الموجه الأول</p>
+                            <p class="text-xl font-black text-white">الأستاذة / عصمت عبدالله إبراهيم</p>
+                        </div>
+                        <div>
+                            <p class="text-lg text-gray-300 mb-2">بمشاركة الموجه</p>
+                            <p class="text-xl font-black text-white">الأستاذ / ياسر سليم عبد العال</p>
+                        </div>
+                    </div>
+
+                    <p class="text-base md:text-lg text-gray-300 mt-8 leading-relaxed border-t border-gray-700 pt-6">
+                        بمشاركة متميزة من السادة الموجهين والمعلمين الأفاضل، تقديراً لدورهم الفعال وجهودهم المخلصة في دعم مسيرة الابتكار والتحول الرقمي، وإعداد جيل واعٍ تقنياً وقادر على المنافسة.
+                    </p>
+                </div>
+
+                <div class="mt-8 text-right bg-black bg-opacity-60 p-6 rounded-lg text-sm text-gray-300 border border-gray-800">
+                    <p class="font-bold text-cyan mb-2">تصميم وتطوير:</p>
+                    <p>أ. محمود محمد عبدالوهاب عيسى</p>
+                    <p>معلم البرمجة والذكاء الاصطناعي - خبير هندرة العمليات والأمن السيبراني</p>
+                    <p>مدرسة محمد هاشم النقيب الثانوية المشتركة - إدارة ميت غمر التعليمية</p>
+                </div>
+
+                <button onclick="navigate('journey')" class="mt-10 btn-cyan px-12 py-4 rounded-full text-2xl shadow-lg">
+                    انطلق في رحلة التدريب <i class="fas fa-route ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- قسم رحلة التدريب -->
+        <section id="journey" class="view-section mt-10">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-black text-cyan mb-4">مسار التدريب الاحترافي</h2>
+                <p class="text-xl text-gray-300">يجب إتمام كل وحدة لفتح الوحدة التي تليها وصولاً للاختبار النهائي</p>
+                <div class="progress-container max-w-xl mx-auto mt-4"><div id="journeyProgress" class="progress-bar"></div></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto" id="boxesContainer">
+                <!-- يُولد برمجيا -->
+            </div>
+
+            <div class="text-center mt-16 hidden" id="quizAccessArea">
+                <div class="inline-block p-1 rounded-full bg-gradient-to-r from-green-400 to-cyan-400 mb-6">
+                    <div class="bg-black rounded-full px-8 py-4">
+                        <h3 class="text-2xl text-white font-bold"><i class="fas fa-check-circle text-green-400"></i> اكتمل التدريب، أنت جاهز للاختبار.</h3>
+                    </div>
+                </div><br>
+                <button onclick="navigate('quiz')" class="btn-cyan px-12 py-4 rounded-full text-2xl animate-pulse">
+                    الدخول لاختبار الجاهزية <i class="fas fa-laptop-code ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- قسم الاختبار -->
+        <section id="quiz" class="view-section mt-10 max-w-4xl mx-auto w-full">
+            <div class="glass-panel p-6 md:p-10 w-full">
+                <div class="flex justify-between items-center mb-4 border-b border-cyan pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold text-cyan">اختبار الجاهزية لسفراء البكالوريا</h2>
+                    <span id="qCount" class="text-xl font-bold bg-cyan px-4 py-1 rounded-full shadow text-black">1 / 30</span>
+                </div>
+                <div class="progress-container mb-8"><div id="quizProgress" class="progress-bar"></div></div>
+                
+                <div id="quizContainer">
+                    <h3 id="questionText" class="text-xl md:text-2xl mb-8 leading-relaxed font-bold text-white"></h3>
+                    <div id="optionsContainer" class="flex flex-col gap-4">
+                        <!-- الخيارات -->
+                    </div>
+                </div>
+
+                <div class="mt-8 text-left border-t border-gray-700 pt-6">
+                    <button id="nextBtn" onclick="nextQuestion()" class="btn-cyan px-10 py-3 rounded-full hidden font-bold text-lg">تأكيد وانتقال <i class="fas fa-chevron-left ml-2"></i></button>
+                    <button id="submitBtn" onclick="submitQuiz()" class="btn-cyan px-10 py-3 rounded-full hidden font-bold bg-red-600 text-lg">إنهاء وعرض النتيجة <i class="fas fa-flag-checkered ml-2"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- قسم النتيجة والشهادة -->
+        <section id="result" class="view-section mt-10 max-w-5xl mx-auto text-center w-full">
+            <div class="glass-panel p-10 mb-8" id="resultPanel">
+                <h2 class="text-4xl text-cyan mb-6 font-bold">تقرير الأداء النهائي</h2>
+                <div class="inline-block p-8 border-4 border-cyan rounded-full mb-6">
+                    <div class="text-7xl font-black text-white" id="scoreDisplay">0%</div>
+                </div>
+                <h3 id="levelDisplay" class="text-3xl font-bold mb-4"></h3>
+                <p class="text-lg text-gray-400 mb-2">عدد المحاولات السابقة: <strong id="attemptsDisplay" class="text-white"></strong></p>
+                <p id="scoreMessage" class="text-xl mb-8 text-gray-300 leading-relaxed"></p>
+                
+                <div id="certActionArea" class="hidden">
+                    <p class="text-lg text-green-400 mb-6 font-bold"><i class="fas fa-cloud-upload-alt"></i> تم الحفظ التلقائي لبياناتك في السجلات.</p>
+                    <button onclick="showCertificate()" class="btn-cyan px-12 py-4 rounded-full text-xl shadow-lg">عرض واستخراج الشهادة <i class="fas fa-award mr-2"></i></button>
+                </div>
+                <div id="failActionArea" class="hidden">
+                    <button onclick="resetTraining()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-10 py-3 rounded-full transition">إعادة المحاولة والتدريب</button>
+                </div>
+            </div>
+
+            <!-- الشهادة -->
+            <div id="certificateArea" class="hidden w-full overflow-x-auto pb-8">
+                <div class="certificate-container mx-auto" id="printableCert" style="min-width: 850px; max-width: 950px; padding: 40px;">
+                    <h1 class="text-5xl font-black text-blue-900 mb-4 tracking-widest mt-4">شـهـادة اجـتـيـاز وتـمـيـز</h1>
+                    <h3 class="text-2xl text-gray-800 mb-10 font-bold border-b-2 border-gray-400 pb-2 inline-block px-12">توجيه الحاسب الآلي بإدارة ميت غمر التعليمية</h3>
+                    
+                    <p class="text-2xl text-gray-700 mb-4 font-bold">تشهد إدارة المنصة التدريبية بأن المتدرب/ة:</p>
+                    <h2 id="certName" class="text-5xl font-black mb-6" style="color: #005cff;">---</h2>
+                    <p class="text-xl text-gray-600 mb-8 font-bold">المدرسة: <strong id="certSchool" class="text-blue-900"></strong> | كود المعلم: <strong id="certCode" class="text-blue-900"></strong></p>
+                    
+                    <p class="text-2xl text-gray-800 mb-8 font-bold leading-relaxed">
+                        قد اجتاز/ت بنجاح وتفوق البرنامج التدريبي الشامل لإعداد<br>
+                        <strong class="text-4xl text-cyan-700 mt-4 block">"سفراء البكالوريا المصرية"</strong>
+                    </p>
+                    
+                    <div class="bg-gray-100 p-4 inline-block rounded-xl border border-gray-300 mb-12 shadow-sm">
+                        <p class="text-2xl text-blue-900 font-black">المستوى: <strong id="certLevelVal"></strong> <strong class="text-gray-400 mx-3">|</strong> نسبة الإنجاز: <strong id="certScoreVal"></strong></p>
+                    </div>
+                    
+                    <div class="flex justify-between items-end mt-4 px-12 text-gray-800 font-bold">
+                        <div class="text-center">
+                            <p class="mb-4 text-xl">يعتمد، الموجه الأول</p>
+                            <p class="text-3xl text-blue-800 italic" style="font-family: 'Arial', sans-serif;">أ. عصمت عبدالله إبراهيم</p>
+                        </div>
+                        <div class="text-center">
+                            <p class="mb-4 text-xl">تاريخ التسجيل</p>
+                            <p id="certDateVal" class="border-b-2 border-black w-40 h-8 mx-auto text-blue-900 font-bold text-xl mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="window.print()" class="mt-8 btn-cyan px-10 py-3 rounded-full shadow-lg text-xl"><i class="fas fa-print mr-2"></i> طباعة الشهادة</button>
+            </div>
+        </section>
+
+        <!-- لوحة التحكم وإحصائيات المتدربين -->
+        <section id="admin" class="view-section mt-10 max-w-6xl mx-auto w-full">
+            <div class="glass-panel p-8 max-w-md mx-auto" id="loginArea">
+                <h2 class="text-3xl text-cyan mb-6 text-center font-bold"><i class="fas fa-cogs"></i> إدارة المنصة</h2>
+                <input type="password" id="adminPass" placeholder="كلمة المرور..." class="input-field mb-6 text-center text-xl tracking-widest">
+                <button onclick="checkAdmin()" class="btn-cyan px-8 py-3 rounded-full w-full text-lg shadow-lg">تسجيل الدخول</button>
+            </div>
+
+            <div class="hidden w-full space-y-8" id="adminDashboard">
+                
+                <!-- الإحصائيات الشاملة -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <div class="glass-panel p-4 text-center">
+                        <h3 class="text-gray-400 mb-2">إجمالي المتدربين</h3>
+                        <p class="text-4xl text-cyan font-bold" id="statTotal">0</p>
+                    </div>
+                    <div class="glass-panel p-4 text-center">
+                        <h3 class="text-gray-400 mb-2">المجتازين</h3>
+                        <p class="text-4xl text-green-400 font-bold" id="statPassed">0</p>
+                    </div>
+                    <div class="glass-panel p-4 text-center">
+                        <h3 class="text-gray-400 mb-2">لم يجتز / مستمر</h3>
+                        <p class="text-4xl text-red-400 font-bold" id="statFailed">0</p>
+                    </div>
+                    <div class="glass-panel p-4 text-center">
+                        <h3 class="text-gray-400 mb-2">متوسط المحاولات</h3>
+                        <p class="text-4xl text-yellow-400 font-bold" id="statAvgAttempts">0</p>
+                    </div>
+                </div>
+
+                <!-- إعدادات الربط -->
+                <div class="glass-panel p-6">
+                    <h2 class="text-2xl text-cyan mb-4 font-bold border-b border-cyan pb-2"><i class="fas fa-link"></i> ربط قاعدة البيانات (Google Apps Script)</h2>
+                    <p class="text-gray-300 mb-4 text-sm">أدخل رابط Web App الخاص بـ Apps Script للحفظ التلقائي لبيانات المتدربين عند استضافة المنصة على GitHub.</p>
+                    <div class="flex gap-4">
+                        <input type="url" id="gasUrlInput" class="input-field flex-grow" placeholder="https://script.google.com/macros/s/...">
+                        <button onclick="saveGasUrl()" class="btn-cyan px-6 py-2 rounded-lg font-bold">حفظ الربط</button>
+                    </div>
+                </div>
+
+                <!-- تعديل بيانات المتدرب من لوحة التحكم -->
+                <div class="glass-panel p-6" id="editTraineeSection" style="display: none;">
+                    <h2 class="text-2xl text-yellow-400 mb-4 font-bold border-b border-yellow-400 pb-2"><i class="fas fa-edit"></i> تعديل بيانات متدرب</h2>
+                    <form onsubmit="saveEditedTrainee(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input type="hidden" id="editOriginalCode">
+                        <div><label class="text-sm text-cyan">الكود</label><input type="number" id="editCode" required class="input-field"></div>
+                        <div><label class="text-sm text-cyan">الاسم</label><input type="text" id="editName" required class="input-field"></div>
+                        <div><label class="text-sm text-cyan">المدرسة</label><input type="text" id="editSchool" required class="input-field"></div>
+                        <div><label class="text-sm text-cyan">البريد</label><input type="email" id="editEmail" required class="input-field"></div>
+                        <div><label class="text-sm text-cyan">الدرجة (%)</label><input type="number" id="editScore" required class="input-field" min="0" max="100"></div>
+                        <div><label class="text-sm text-cyan">المحاولات</label><input type="number" id="editAttempts" required class="input-field" min="0"></div>
+                        <div class="md:col-span-3 flex justify-end gap-4 mt-2">
+                            <button type="button" onclick="cancelEdit()" class="px-6 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 font-bold">إلغاء</button>
+                            <button type="submit" class="btn-cyan px-6 py-2 rounded-lg font-bold">حفظ التعديلات</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- سجل المتدربين -->
+                <div class="glass-panel p-6 overflow-hidden">
+                    <div class="flex justify-between items-center mb-4 border-b border-cyan pb-2">
+                        <h2 class="text-2xl text-cyan font-bold"><i class="fas fa-users"></i> سجل المتدربين (المحلي)</h2>
+                        <button onclick="clearTrainees()" class="text-red-400 hover:text-red-300 font-bold"><i class="fas fa-trash"></i> مسح السجل</button>
+                    </div>
+                    <div class="overflow-x-auto w-full rounded-lg border border-gray-700">
+                        <table class="w-full text-right border-collapse min-w-[900px]">
+                            <thead>
+                                <tr class="bg-cyan text-black text-sm">
+                                    <th class="p-3 border-b border-gray-700">التاريخ</th>
+                                    <th class="p-3 border-b border-gray-700">الكود</th>
+                                    <th class="p-3 border-b border-gray-700">الاسم</th>
+                                    <th class="p-3 border-b border-gray-700">المدرسة</th>
+                                    <th class="p-3 border-b border-gray-700">الدرجة</th>
+                                    <th class="p-3 border-b border-gray-700">المحاولات</th>
+                                    <th class="p-3 border-b border-gray-700">الحالة</th>
+                                    <th class="p-3 border-b border-gray-700 text-center">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="traineesTableBody" class="text-gray-200 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- بنك الأسئلة المعتمد -->
+                <div class="glass-panel p-6 overflow-hidden">
+                    <h2 class="text-2xl text-cyan mb-4 font-bold border-b border-cyan pb-2"><i class="fas fa-key"></i> مفتاح إجابات الاختبار المعتمد</h2>
+                    <div class="overflow-x-auto w-full rounded-lg border border-gray-700">
+                        <table class="w-full text-right border-collapse min-w-[600px]">
+                            <thead>
+                                <tr class="bg-gray-800 text-cyan text-sm">
+                                    <th class="p-3 border-b border-gray-700 w-12 text-center">م</th>
+                                    <th class="p-3 border-b border-gray-700">نص السؤال</th>
+                                    <th class="p-3 border-b border-gray-700">الإجابة المعتمدة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="answersTableBody" class="text-gray-300 text-sm"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- الفوتر السيادي الأزرق والسماوي الأصلي -->
+    <div class="footer-wrapper">
+        <div class="circle-container">
+            <svg viewBox="0 0 500 500" class="rotating-svg">
+                <defs><path id="textCirclePath" d="M 250, 440 A 190,190 0 1,1 250,60 A 190,190 0 1,1 250,440" /></defs>
+                <circle cx="250" cy="250" r="215" fill="none" stroke="rgba(0, 210, 255, 0.4)" stroke-width="4" />
+                <circle cx="250" cy="250" r="165" fill="none" stroke="rgba(0, 210, 255, 0.4)" stroke-width="4" />
+                <text><textPath href="#textCirclePath" startOffset="50%" text-anchor="middle" class="text-path-style">
+                    ALL RIGHTS RESERVED ®© DESIGNED & DEVELOPED BY <tspan class="name-highlight">MAHMOUD MOHAMED</tspan>
+                </textPath></text>
+            </svg>
+            <div class="center-prayer">
+                <span>ولا تنسونا من خالص دعائكم بظهر الغيب</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- المنطق البرمجي (JavaScript) -->
+    <script>
+        // 1. المحتوى العلمي الخالي تماماً من الأخطاء والشوائب 
+        const trainingUnits = [
+            {
+                title: "الوحدة 1: فلسفة التعلم وإعداد معلم المستقبل",
+                icon: "fa-brain",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <img src="https://static.vecteezy.com/system/resources/thumbnails/005/610/686/small/coaching-and-mentoring-ideas-self-development-online-training-courses-corporate-education-company-workshop-illustration-with-icons-and-characters-free-vector.jpg" class="w-full max-w-lg mx-auto rounded-xl border border-cyan shadow-lg mb-4" alt="ورشة تدريبية">
+                        <p class="text-gray-200 text-lg leading-relaxed">تعتمد الفلسفة التربوية في البكالوريا المصرية على التحول الشامل من أسلوب التلقين والحفظ إلى بناء الكفاءة والمهارة وتطبيق الاستقصاء.</p>
+                        <div class="bg-gray-800 p-5 rounded-xl border border-cyan">
+                            <h4 class="text-cyan font-bold text-xl mb-3"><i class="fas fa-random ml-2"></i>التحول الفلسفي</h4>
+                            <ul class="list-disc list-inside text-gray-300 space-y-2">
+                                <li><strong class="text-white">معيار النجاح:</strong> الفهم والتطبيق والابتكار بدلاً من استرجاع النصوص.</li>
+                                <li><strong class="text-white">دور الطالب:</strong> مكتشف ومستقصٍ ومعالج (وليس متلقٍ سلبي).</li>
+                                <li><strong class="text-white">دور المعلم:</strong> مصمم لخبرات التعلم وميسر.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-900 bg-opacity-30 p-5 rounded-xl border-r-4 border-cyan">
+                            <h4 class="text-cyan font-bold text-xl mb-2"><i class="fas fa-lightbulb ml-2"></i>القاعدة التربوية الذهبية</h4>
+                            <p class="text-gray-200">تغيير فكرة أو مفهوم خاطئ لدى الطالب أهم بكثير من إضافة معلومات جديدة فوق بنيان هش.</p>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "الوحدة 2: الأنظمة الرائدة والتعددية",
+                icon: "fa-sitemap",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <p class="text-gray-200 text-lg leading-relaxed">ترتكز الأنظمة العالمية الرائدة على المنهج القائم على الكفايات والذي يجمع بين المعارف والمهارات والاتجاهات والقيم، مع إتاحة مسارات متعددة لتناسب جميع الطلاب.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <img src="https://cdn.prod.website-files.com/658e89a0c7d6a88a8285060f/679a1c8e1e28207351be8edb_679a1c773b3486ebaefa9f0f_STEM%2520vs%2520STEAM.png" class="w-full rounded-xl border border-cyan shadow-lg" alt="STEM vs STEAM">
+                            <img src="https://www.worldbank.org/content/dam/infographics/780xany/2025/jan/Equity-and-Inclusion-in-education.png" class="w-full rounded-xl border border-cyan shadow-lg" alt="العدالة والشمول">
+                        </div>
+                        <div class="bg-gray-800 p-5 rounded-xl border border-cyan mt-4">
+                            <h4 class="text-cyan font-bold text-xl mb-3"><i class="fas fa-book ml-2"></i>مصطلحات واختصارات هامة</h4>
+                            <ul class="list-disc list-inside text-gray-300 space-y-2">
+                                <li><strong class="text-white">STEM / STEAM:</strong> دمج العلوم، التكنولوجيا، الهندسة، الفنون، والرياضيات لحل المشكلات.</li>
+                                <li><strong class="text-white">Equity (العدالة):</strong> تزويد كل طالب بالدعم الذي يحتاجه تحديداً لنجاحه، وليس المساواة العمياء.</li>
+                                <li><strong class="text-white">Inclusion (الشمول):</strong> دمج جميع الطلاب باختلاف خلفياتهم وقدراتهم في بيئة تعليمية واحدة.</li>
+                                <li><strong class="text-white">Outcomes (المخرجات):</strong> التركيز على ما يستطيع الطالب إتقانه وليس حجم المحتوى.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "الوحدة 3: التكنولوجيا والتجربة اليابانية",
+                icon: "fa-laptop-code",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <img src="https://realprogramming.com/wp-content/uploads/2024/01/Group-of-youthful-boys-and-girl-holding-laptops.jpg.webp" class="w-full rounded-xl border border-cyan shadow-lg mb-4" alt="طلاب وبرمجة">
+                        <p class="text-gray-200 text-lg leading-relaxed">تم تصميم منهج تكنولوجيا المعلومات (ICT) استناداً إلى التجربة اليابانية بأسلوب "التعلم الحلزوني المتصاعد" لبناء الأساسيات كقوالب متراكمة.</p>
+                        <div class="bg-gray-800 p-5 rounded-xl border border-cyan">
+                            <h4 class="text-cyan font-bold text-xl mb-3"><i class="fas fa-microchip ml-2"></i>مصطلحات تقنية مستهدفة</h4>
+                            <ul class="list-disc list-inside text-gray-300 space-y-2">
+                                <li><strong class="text-white">AI (الذكاء الاصطناعي):</strong> التقنيات التي تحاكي السلوك البشري.</li>
+                                <li><strong class="text-white">Recommendation System (نظام التوصية):</strong> يتوقع التفضيلات كما في منصات الفيديو.</li>
+                                <li><strong class="text-white">Machine Translation:</strong> الترجمة الآلية للنصوص.</li>
+                                <li><strong class="text-white">Moore's Law (قانون مور):</strong> مضاعفة عدد الترانزستورات تقريباً كل عامين.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-900 bg-opacity-30 p-5 rounded-xl border-r-4 border-cyan">
+                            <h4 class="text-cyan font-bold text-xl mb-2"><i class="fas fa-cogs ml-2"></i>مكونات المنظومة الرقمية</h4>
+                            <ul class="list-disc list-inside text-gray-200 space-y-2">
+                                <li>تدريس البرمجة (Python و JavaScript) عبر منصة QUREO.</li>
+                                <li>تطبيق اختبار TOFAS العالمي لقياس المهارات الأكاديمية والبرمجية.</li>
+                                <li>الاعتماد على مبدأ KAIZEN (التقييم المستمر بغرض التحسين).</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "الوحدة 4: التقييم والمراقبة",
+                icon: "fa-chart-line",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <p class="text-gray-200 text-lg leading-relaxed">تتبنى البكالوريا المصرية تقييمات متنوعة لتقليل الضغط النفسي، فتتيح فرصاً امتحانية متعددة تصل لـ 4 محاولات تُعتمد فيها الدرجة الأعلى.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <img src="https://www.teachhub.com/wp-content/uploads/2020/06/Feb.-28-How-to-Use-Assessments-in-Your-Classroom_web.jpg" class="w-full rounded-xl border border-cyan shadow-lg" alt="التقييم الشامل">
+                            <img src="https://www.educationnext.org/wp-content/uploads/2025/08/ednext_25_4_korbey_img01.png" class="w-full rounded-xl border border-cyan shadow-lg" alt="الاختبارات الإلكترونية">
+                        </div>
+                        <div class="bg-gray-800 p-5 rounded-xl border border-cyan mt-4">
+                            <h4 class="text-cyan font-bold text-xl mb-3"><i class="fas fa-tasks ml-2"></i>مكونات وتصنيفات الاختبارات</h4>
+                            <ul class="list-disc list-inside text-gray-300 space-y-2">
+                                <li><strong class="text-white">MCQ (الاختيار من متعدد):</strong> تتكون من (جذع السؤال Stem) وهو نص المشكلة، والخيارات (البدائل Options) والتي تشمل (المشتتات Distractors).</li>
+                                <li><strong class="text-white">Rubric (نموذج الإجابة):</strong> لضمان العدالة وتوحيد المعايير في تصحيح الأسئلة المقالية.</li>
+                                <li><strong class="text-white">تصنيف بلوم (Bloom's Taxonomy):</strong> (التذكر، الفهم، التطبيق، التحليل، التقييم، الإبداع). يُستخدم (الإبداع Create) خصيصاً في اللغات.</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            {
+                title: "الوحدة 5: مهام سفير البكالوريا",
+                icon: "fa-users-cog",
+                content: `
+                    <div class="space-y-6 text-right">
+                        <img src="https://www.jagannath.org/blog/wp-content/uploads/2025/03/4.png" class="w-full max-w-sm mx-auto rounded-xl border border-cyan shadow-lg mb-4" alt="رموز التعليم والريادة">
+                        <p class="text-gray-200 text-lg leading-relaxed">السفير الناجح ليس ناقلاً للمعلومات فقط، بل هو قائد حقيقي للتغيير والتطوير المستمر داخل محافظته.</p>
+                        <div class="bg-gray-800 p-5 rounded-xl border border-cyan">
+                            <h4 class="text-cyan font-bold text-xl mb-3"><i class="fas fa-user-tie ml-2"></i>الأدوار الأساسية للسفير (Ambassador Roles)</h4>
+                            <ul class="list-disc list-inside text-gray-300 space-y-2">
+                                <li><strong class="text-white">Content Expert (خبير بالمحتوى):</strong> ملم بفلسفة البكالوريا وتقنياتها.</li>
+                                <li><strong class="text-white">Teacher Trainer (مدرب للمعلمين):</strong> تنفيذ خطط التدريب بدقة وموثوقية.</li>
+                                <li><strong class="text-white">Implementation Supporter (داعم للتطبيق):</strong> تذليل عقبات التطبيق الميداني داخل الغرف الصفية.</li>
+                                <li><strong class="text-white">Community of Practice (مجتمع ممارسة):</strong> قيادة مجتمعات ممارسة لتبادل الخبرات الناجحة بين المعلمين.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-blue-900 bg-opacity-30 p-5 rounded-xl border-r-4 border-cyan">
+                            <h4 class="text-cyan font-bold text-xl mb-2"><i class="fas fa-shield-alt ml-2"></i>مواجهة التحديات</h4>
+                            <p class="text-gray-200">في حال وجود تخوف من التغيير، يقوم السفير بتقديم دعم عملي وتوجيه مباشر داخل الفصول، مع إرساء قواعد ومتابعة مستمرة وفق خطة التنفيذ المعتمدة.</p>
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // 2. الأسئلة الـ 30 الصارمة
+        const questionsData = [
+            { q: "1. الهدف الأساسي من تطبيق نظام البكالوريا المصرية هو:", options: ["إلغاء الامتحانات تماماً", "تخفيف الضغط النفسي وتعدد فرص الامتحان", "الاعتماد الكلي على الحفظ", "توحيد جميع المسارات"], ans: 1 },
+            { q: "2. في الغرفة الصفية لمدارس البكالوريا، يتحول الطالب إلى:", options: ["متلقٍ سلبي", "مراقب فقط", "مكتشف ومستقصٍ يبني معرفته", "مصحح للأوراق"], ans: 2 },
+            { q: "3. مزيج (المعارف والمهارات والاتجاهات والقيم) يُعرف في الأنظمة الرائدة بـ:", options: ["التلقين المباشر", "المنهج القائم على الكفايات", "التقييم الكمي", "التعليم النظري"], ans: 1 },
+            { q: "4. منهجية STEAM تعني التعلم البيني الذي يدمج التكنولوجيا والعلوم و:", options: ["الهندسة والفنون والرياضيات", "اللغات والتربية الرياضية", "التاريخ والجغرافيا", "الفلسفة والمنطق"], ans: 0 },
+            { q: "5. المنهج الياباني في تكنولوجيا المعلومات يعتمد على بناء الأساسيات بأسلوب:", options: ["التعلم الخطي السريع", "التعلم العشوائي", "التعلم الحلزوني المتصاعد", "الحفظ المباشر"], ans: 2 },
+            { q: "6. منصة QUREO التفاعلية تُستخدم لتدريب الطلاب على لغات:", options: ["C++ و PHP", "Python و JavaScript", "HTML فقط", "Ruby و Swift"], ans: 1 },
+            { q: "7. لتقليل توتر الطلاب، يتيح نظام البكالوريا للطالب فرص امتحان تصل إجمالاً إلى:", options: ["محاولة واحدة", "محاولتان فقط مدى الحياة", "أربع محاولات (تُعتمد الأعلى)", "عشر محاولات"], ans: 2 },
+            { q: "8. المكونان الأساسيان في أي سؤال اختيار من متعدد (MCQ) هما:", options: ["المقالة والتلخيص", "المقدمة والخاتمة", "جذع السؤال والبدائل", "الصورة والنص"], ans: 2 },
+            { q: "9. مصطلح 'المشتتات' في أسئلة الامتحان يُقصد به:", options: ["البدائل الخاطئة المصاغة لتبدو قريبة من الصحيحة", "الأسئلة الملغية من المنهج", "الإجابات النموذجية", "وقت الاستراحة"], ans: 0 },
+            { q: "10. لتحقيق العدالة وتقليل الذاتية في تصحيح (الأسئلة المقالية)، يُنصح بـ:", options: ["إلغاء هذه الأسئلة", "التصحيح السريع", "استخدام نموذج إجابة تفصيلي (Rubric)", "الاعتماد على جهاز الكمبيوتر فقط"], ans: 2 },
+            { q: "11. أعلى مستوى في تصنيف بلوم (ويستخدم لإنتاج نصوص جديدة في اللغات) هو:", options: ["التذكر", "الفهم", "التطبيق", "الإبداع"], ans: 3 },
+            { q: "12. مهام 'سفير البكالوريا' تتعدى نقل المعلومات لتشمل كونه:", options: ["مدخلاً للبيانات", "خبيراً ومدرباً وداعماً فنياً وقائداً للتغيير", "مراقباً إدارياً", "حارساً للمدرسة"], ans: 1 },
+            { q: "13. مفهوم 'العدالة (Equity)' في التعليم يعني:", options: ["تزويد كل طالب بالدعم الذي يحتاجه لنجاحه", "إعطاء نفس الدرجة للجميع", "تجاهل الفروق الفردية", "توحيد طرق الشرح إجبارياً"], ans: 0 },
+            { q: "14. لضمان عمق المعرفة في البكالوريا، يدرس الطالب في الصف الثالث الثانوي:", options: ["10 مواد", "7 مواد", "مادتين فقط", "5 مواد"], ans: 2 },
+            { q: "15. المهارات المستهدفة للجاهزية للمستقبل المهني تشمل:", options: ["النسخ والنقل", "الذكاء الاصطناعي والتواصل الفعال وحل المشكلات", "العمل المنفرد", "الابتعاد عن التكنولوجيا"], ans: 1 },
+            { q: "16. الاختبارات الشفوية أداة هامة لأنها تقيس بفاعلية:", options: ["مهارات الخط", "سلامة النطق والطلاقة والتجويد", "السرعة في الجري", "حفظ التواريخ"], ans: 1 },
+            { q: "17. لحل مشكلة عدم الموضوعية في الاختبار الشفوي، يجب:", options: ["إعداد بنك أسئلة والسحب العشوائي", "تقييم الطالب بصرياً", "تقليل الوقت لثوانٍ", "إلغاء الاختبار"], ans: 0 },
+            { q: "18. عند صياغة 'جذع السؤال' في الاختبارات الموضوعية يجب أن:", options: ["يكون مبهماً ومطولاً", "يحتوي على إجابة السؤال", "يقيس فكرة واحدة فقط ويكون واضحاً", "يستخدم النفي المزدوج بكثرة"], ans: 2 },
+            { q: "19. تغيير السلوك عند الشعور بأننا مُراقبون يبرز أهمية عملية:", options: ["العقاب البدني", "التجاهل المستمر", "التقييم والمتابعة", "التلقين"], ans: 2 },
+            { q: "20. من أهم التزامات سفير البكالوريا داخل محافظته:", options: ["عدم مشاركة خبراته", "قيادة مجتمعات ممارسة لتبادل الخبرات", "التغيب عن المدارس", "وضع الاختبارات النهائية"], ans: 1 },
+            { q: "21. بناء المعرفة خطوة بخطوة عبر المراحل يشير إلى:", options: ["الترابط الرأسي والأفقي", "انفصال المواد", "التكرار الممل", "إلغاء المرحلة الأساسية"], ans: 0 },
+            { q: "22. القاعدة التربوية الذهبية تنص على أن تغيير المفهوم الخاطئ لدى الطالب:", options: ["مستحيل تماماً", "أهم بكثير من إضافة معلومات جديدة", "يحتاج لعقاب فوري", "لا يؤثر على التعلم"], ans: 1 },
+            { q: "23. مبدأ (KAIZEN) الياباني يعني:", options: ["الاستسلام عند الفشل", "العمل المنفرد", "التقييم المستمر بغرض التحسين والتطوير", "النجاح بدون جهد"], ans: 2 },
+            { q: "24. لقياس المهارات الأكاديمية والبرمجية بموضوعية يتم استخدام اختبار:", options: ["محلي ورقي", "TOFAS العالمي", "شفوي سريع", "عملي في الفنون"], ans: 1 },
+            { q: "25. التحول الفلسفي في صورة الطالب يجعل (معيار النجاح) يقاس بـ:", options: ["الحفظ واسترجاع النصوص", "الفهم والتطبيق والابتكار", "عدد الساعات التي قضاها", "جودة خط يده"], ans: 1 },
+            { q: "26. من أهم خطوات الإدارة الصفية ومنع السلوك غير المناسب:", options: ["التوبيخ المستمر", "تجهيز البيئة الصفية مسبقاً", "تجاهل الطلاب", "الطرد من الفصل"], ans: 1 },
+            { q: "27. التأمل والتعلم الذاتي يعتمد على طرح الطالب سؤالاً مهماً لنفسه وهو:", options: ["متى موعد الانصراف؟", "ماذا تعلمت اليوم وكيف أطبقه؟", "من هو المعلم الأسهل؟", "كم صفحة قرأت؟"], ans: 1 },
+            { q: "28. في التعلم بالاستقصاء، يجب أن يبدأ المعلم بـ:", options: ["طرح أسئلة مفتوحة تنشط الفضول", "قراءة الإجابة النموذجية", "عقاب المتأخرين", "كتابة الملخص"], ans: 0 },
+            { q: "29. التقييم القائم على الكفايات يعتمد في تقويمه على:", options: ["اختبار نظري يعتمد على الذاكرة", "مهام أدائية وتقويم حقيقي للمشروعات", "الحضور والانصراف فقط", "سرعة الإجابة شفوياً"], ans: 1 },
+            { q: "30. في الحصة الأولى، من الضروري للمعلم أن:", options: ["يتصرف كصديق لا قواعد له", "يترك الطلاب بلا مهام", "يُرسخ علاقة (معلم وطالب) بوضوح وثبات", "يلغي المنهج"], ans: 2 }
+        ];
+
+        // 3. إدارة حالة التطبيق محلياً
+        let currentTrainee = null;
+        let unlockedUnit = parseInt(localStorage.getItem('gweryaxUnlocked')) || 0; 
+        let currentQ = 0;
+        let score = 0;
+        let selectedAnswers = new Array(30).fill(null);
+        let gasUrl = localStorage.getItem('gweryaxGasUrl') || '';
+
+        // 4. وظائف التنقل والشاشات
+        function navigate(viewId) {
+            if(!currentTrainee && viewId !== 'admin') {
+                document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+                document.getElementById('registration').classList.add('active');
+                return;
+            }
+            
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if(viewId === 'journey') renderJourney();
+            if(viewId === 'quiz') startQuiz();
+        }
+
+        function showAlert(title, message) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            document.getElementById('alertModal').classList.add('active');
+        }
+        function closeAlertModal() { document.getElementById('alertModal').classList.remove('active'); }
+
+        // 5. التسجيل الإلزامي
+        function handleRegistration(e) {
+            e.preventDefault();
+            const code = document.getElementById('regCode').value.trim();
+            const name = document.getElementById('regName').value.trim();
+            const school = document.getElementById('regSchool').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            
+            if(name.split(' ').length < 4) {
+                showAlert('بيانات غير مكتملة', 'يرجى إدخال الاسم رباعياً مطابقاً لصحيفة الأحوال.');
+                return;
+            }
+
+            const regDate = new Date().toLocaleDateString('ar-EG'); 
+
+            currentTrainee = { code, name, school, email, score: 0, level: 'قيد التدريب', status: 'مستمر', date: regDate, attempts: 0 };
+            localStorage.setItem('gweryaxTrainee', JSON.stringify(currentTrainee));
+            
+            document.getElementById('welcomeName').innerText = name;
+            document.getElementById('mainNav').classList.remove('hidden');
+            
+            saveToDatabase(currentTrainee);
+            navigate('home');
+        }
+
+        // 6. رحلة التدريب
+        function renderJourney() {
+            const container = document.getElementById('boxesContainer');
+            container.innerHTML = '';
+            
+            let progressPercent = (unlockedUnit / trainingUnits.length) * 100;
+            document.getElementById('journeyProgress').style.width = `${progressPercent}%`;
+
+            trainingUnits.forEach((unit, index) => {
+                const box = document.createElement('div');
+                const isCompleted = index < unlockedUnit;
+                const isCurrent = index === unlockedUnit;
+                const isLocked = index > unlockedUnit;
+
+                let stateClass = '';
+                let iconStr = '';
+                
+                if (isCompleted) {
+                    stateClass = 'completed';
+                    iconStr = `<i class="fas fa-check-circle text-green-400 text-5xl mb-4"></i>`;
+                } else if (isCurrent) {
+                    stateClass = 'unlocked';
+                    iconStr = `<i class="fas ${unit.icon} gift-icon"></i>`;
+                } else {
+                    stateClass = 'locked';
+                    iconStr = `<i class="fas fa-lock text-gray-500 text-5xl mb-4"></i>`;
+                }
+
+                box.className = `gift-box ${stateClass}`;
+                box.innerHTML = `
+                    ${iconStr}
+                    <h3 class="text-xl font-bold text-white">${unit.title}</h3>
+                    <p class="text-sm mt-2 font-bold ${isLocked ? 'text-gray-500' : 'text-cyan'}">${isCompleted ? 'تم التدريب بنجاح' : (isCurrent ? 'انقر لفتح الوحدة' : 'مغلق حالياً')}</p>
+                `;
+
+                if (!isLocked) box.onclick = () => openUnit(index);
+                container.appendChild(box);
+            });
+
+            const quizArea = document.getElementById('quizAccessArea');
+            const navQuiz = document.getElementById('navQuizBtn');
+            
+            if (unlockedUnit >= trainingUnits.length) {
+                quizArea.classList.remove('hidden');
+                navQuiz.innerHTML = `<i class="fas fa-laptop-code"></i> الاختبار (متاح)`;
+                navQuiz.classList.replace('text-gray-500', 'text-green-400');
+            } else {
+                quizArea.classList.add('hidden');
+                navQuiz.innerHTML = `<i class="fas fa-lock"></i> الاختبار (مغلق)`;
+                navQuiz.classList.replace('text-green-400', 'text-gray-500');
+            }
+        }
+
+        let viewingUnitIndex = 0;
+        function openUnit(index) {
+            viewingUnitIndex = index;
+            document.getElementById('trainingTitle').innerText = trainingUnits[index].title;
+            document.getElementById('trainingBody').innerHTML = trainingUnits[index].content;
+            
+            const btn = document.getElementById('completeUnitBtn');
+            btn.style.display = (index < unlockedUnit) ? 'none' : 'inline-block';
+            
+            document.getElementById('trainingModal').classList.add('active');
+        }
+
+        function closeTrainingModal() { document.getElementById('trainingModal').classList.remove('active'); }
+
+        function completeCurrentUnit() {
+            if (viewingUnitIndex === unlockedUnit) {
+                unlockedUnit++;
+                localStorage.setItem('gweryaxUnlocked', unlockedUnit);
+            }
+            closeTrainingModal();
+            renderJourney();
+            showAlert('إنجاز رائع', 'تم استيعاب الوحدة بنجاح، مسارك مفتوح للوحدة التالية.');
+        }
+
+        // 7. نظام الاختبار
+        function startQuiz() {
+            if (unlockedUnit < trainingUnits.length) {
+                navigate('journey');
+                showAlert('تنبيه هام', 'يجب المرور على جميع صناديق التدريب وإتمامها أولاً.');
+                return;
+            }
+            currentQ = 0;
+            selectedAnswers.fill(null);
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = questionsData[currentQ];
+            document.getElementById('qCount').innerText = `${currentQ + 1} / 30`;
+            document.getElementById('quizProgress').style.width = `${((currentQ) / 30) * 100}%`;
+            document.getElementById('questionText').innerText = q.q;
+            
+            const optsContainer = document.getElementById('optionsContainer');
+            optsContainer.innerHTML = '';
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                const isSelected = selectedAnswers[currentQ] === index;
+                btn.className = `w-full text-right p-4 rounded-xl border-2 transition font-bold text-lg ${isSelected ? 'bg-cyan border-cyan text-black shadow-lg' : 'bg-gray-800 border-gray-600 hover:border-cyan text-white'}`;
+                btn.innerText = opt;
+                btn.onclick = () => { selectedAnswers[currentQ] = index; loadQuestion(); };
+                optsContainer.appendChild(btn);
+            });
+
+            document.getElementById('nextBtn').classList.toggle('hidden', currentQ === 29);
+            document.getElementById('submitBtn').classList.toggle('hidden', currentQ !== 29);
+        }
+
+        function nextQuestion() {
+            if (selectedAnswers[currentQ] === null) {
+                showAlert('تنبيه', 'يرجى تحديد إجابة لاعتمادها والمضي قدماً.');
+                return;
+            }
+            currentQ++;
+            loadQuestion();
+        }
+
+        function submitQuiz() {
+            if (selectedAnswers[currentQ] === null) {
+                showAlert('تنبيه', 'أجب على السؤال الأخير لتسليم الاختبار.');
+                return;
+            }
+            
+            score = 0;
+            selectedAnswers.forEach((ans, idx) => { if (ans === questionsData[idx].ans) score++; });
+
+            const percent = Math.round((score / 30) * 100);
+            document.getElementById('quizProgress').style.width = `100%`;
+            
+            let level = '', msg = '', passed = false;
+
+            if(percent >= 90) {
+                level = 'متقدم احترافي';
+                msg = 'أداء مشجع ومحفز! أنت الآن مؤهل لتكون سفيراً معتمداً للبكالوريا.';
+                passed = true;
+            } else if(percent >= 70) {
+                level = 'متقدم';
+                msg = 'مستوى متقدم وجيد جداً، نبارك لك هذا الاجتياز.';
+                passed = true;
+            } else {
+                level = 'يحتاج دعم';
+                msg = 'لم تحقق نسبة الإتقان المطلوبة (70%). يرجى إعادة الرحلة التدريبية والمحاولة.';
+                passed = false;
+            }
+
+            // تحديث بيانات المتدرب والمحاولات
+            currentTrainee.attempts = (currentTrainee.attempts || 0) + 1;
+            currentTrainee.score = percent;
+            currentTrainee.level = level;
+            currentTrainee.status = passed ? 'مجتاز' : 'لم يجتز';
+            
+            localStorage.setItem('gweryaxTrainee', JSON.stringify(currentTrainee));
+            saveToDatabase(currentTrainee);
+            sendToGoogleSheet(currentTrainee);
+
+            document.getElementById('scoreDisplay').innerText = `${percent}%`;
+            const lvlDisp = document.getElementById('levelDisplay');
+            lvlDisp.innerText = level;
+            lvlDisp.className = passed ? 'text-4xl font-bold mb-2 text-green-400' : 'text-4xl font-bold mb-2 text-red-400';
+            
+            document.getElementById('attemptsDisplay').innerText = currentTrainee.attempts;
+            document.getElementById('scoreMessage').innerText = msg;
+            
+            document.getElementById('certActionArea').classList.toggle('hidden', !passed);
+            document.getElementById('failActionArea').classList.toggle('hidden', passed);
+            
+            navigate('result');
+        }
+
+        function resetTraining() {
+            unlockedUnit = 0;
+            localStorage.setItem('gweryaxUnlocked', 0);
+            navigate('journey');
+        }
+
+        // 8. الشهادة الاحترافية
+        function showCertificate() {
+            document.getElementById('resultPanel').classList.add('hidden');
+            document.getElementById('certificateArea').classList.remove('hidden');
+            
+            document.getElementById('certName').innerText = currentTrainee.name;
+            document.getElementById('certSchool').innerText = currentTrainee.school;
+            document.getElementById('certCode').innerText = currentTrainee.code;
+            document.getElementById('certScoreVal').innerText = currentTrainee.score + '%';
+            document.getElementById('certLevelVal').innerText = currentTrainee.level;
+            
+            // ترك التاريخ فارغاً للتدوين اليدوي التزاماً بالمعايير الخاصة بك
+        }
+
+        // 9. لوحة تحكم الإدارة الشاملة
+        function checkAdmin() {
+            const pass = document.getElementById('adminPass').value;
+            if (pass === 'Thanksmrmahmoud2027') {
+                document.getElementById('loginArea').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                document.getElementById('gasUrlInput').value = gasUrl;
+                populateAdmin();
+            } else {
+                showAlert('غير مصرح', 'كلمة المرور غير صحيحة.');
+            }
+        }
+
+        function saveGasUrl() {
+            gasUrl = document.getElementById('gasUrlInput').value.trim();
+            localStorage.setItem('gweryaxGasUrl', gasUrl);
+            showAlert('نجاح', 'تم حفظ وتفعيل رابط Apps Script بنجاح. المنصة جاهزة للحفظ السحابي عبر GitHub.');
+        }
+
+        function saveToDatabase(trainee) {
+            let db = JSON.parse(localStorage.getItem('gweryaxDB')) || {};
+            db[trainee.code] = trainee; 
+            localStorage.setItem('gweryaxDB', JSON.stringify(db));
+        }
+
+        function clearTrainees() {
+            if(confirm("تحذير: سيتم مسح جميع البيانات المحلية نهائياً. هل أنت متأكد؟")) {
+                localStorage.removeItem('gweryaxDB');
+                populateAdmin();
+            }
+        }
+
+        function editTrainee(code) {
+            let db = JSON.parse(localStorage.getItem('gweryaxDB')) || {};
+            let trainee = db[code];
+            if(trainee) {
+                document.getElementById('editOriginalCode').value = trainee.code;
+                document.getElementById('editCode').value = trainee.code;
+                document.getElementById('editName').value = trainee.name;
+                document.getElementById('editSchool').value = trainee.school;
+                document.getElementById('editEmail').value = trainee.email;
+                document.getElementById('editScore').value = trainee.score;
+                document.getElementById('editAttempts').value = trainee.attempts || 0;
+                document.getElementById('editTraineeSection').style.display = 'block';
+            }
+        }
+
+        function cancelEdit() {
+            document.getElementById('editTraineeSection').style.display = 'none';
+        }
+
+        function saveEditedTrainee(e) {
+            e.preventDefault();
+            let db = JSON.parse(localStorage.getItem('gweryaxDB')) || {};
+            const origCode = document.getElementById('editOriginalCode').value;
+            const newCode = document.getElementById('editCode').value;
+            
+            const score = parseInt(document.getElementById('editScore').value);
+            let status = 'مستمر', level = 'قيد التدريب';
+            if(score >= 90) { status = 'مجتاز'; level = 'متقدم احترافي'; }
+            else if(score >= 70) { status = 'مجتاز'; level = 'متقدم'; }
+            else { status = 'لم يجتز'; level = 'يحتاج دعم'; }
+
+            const updatedTrainee = {
+                code: newCode,
+                name: document.getElementById('editName').value,
+                school: document.getElementById('editSchool').value,
+                email: document.getElementById('editEmail').value,
+                score: score,
+                attempts: parseInt(document.getElementById('editAttempts').value),
+                status: status,
+                level: level,
+                date: db[origCode].date 
+            };
+
+            if (origCode !== newCode) { delete db[origCode]; }
+            db[newCode] = updatedTrainee;
+            localStorage.setItem('gweryaxDB', JSON.stringify(db));
+            
+            if(currentTrainee && currentTrainee.code === origCode) {
+                currentTrainee = updatedTrainee;
+                localStorage.setItem('gweryaxTrainee', JSON.stringify(currentTrainee));
+            }
+
+            cancelEdit();
+            populateAdmin();
+            showAlert('نجاح', 'تم تحديث بيانات المتدرب وحفظها.');
+        }
+
+        function deleteTrainee(code) {
+            if(confirm('هل أنت متأكد من حذف بيانات هذا المتدرب؟')) {
+                let db = JSON.parse(localStorage.getItem('gweryaxDB')) || {};
+                delete db[code];
+                localStorage.setItem('gweryaxDB', JSON.stringify(db));
+                populateAdmin();
+            }
+        }
+
+        function populateAdmin() {
+            let db = JSON.parse(localStorage.getItem('gweryaxDB')) || {};
+            let total = 0, passed = 0, failed = 0, attemptsSum = 0;
+
+            const tBody = document.getElementById('traineesTableBody');
+            tBody.innerHTML = '';
+            
+            for (let key in db) {
+                const t = db[key];
+                total++;
+                if(t.status === 'مجتاز') passed++;
+                else failed++; 
+                
+                attemptsSum += (t.attempts || 0);
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-700 hover:bg-gray-800 transition";
+                const color = t.status === 'مجتاز' ? 'text-green-400' : (t.status === 'لم يجتز' ? 'text-red-400' : 'text-yellow-400');
+                tr.innerHTML = `
+                    <td class="p-3 border-b border-gray-700">${t.date || '-'}</td>
+                    <td class="p-3 border-b border-gray-700 text-cyan font-bold">${t.code}</td>
+                    <td class="p-3 border-b border-gray-700">${t.name}</td>
+                    <td class="p-3 border-b border-gray-700">${t.school}</td>
+                    <td class="p-3 border-b border-gray-700 font-bold">${t.score}%</td>
+                    <td class="p-3 border-b border-gray-700 font-bold">${t.attempts || 0}</td>
+                    <td class="p-3 border-b border-gray-700 font-bold ${color}">${t.status}</td>
+                    <td class="p-3 border-b border-gray-700 text-center">
+                        <button onclick="editTrainee('${t.code}')" class="text-yellow-400 hover:text-yellow-300 ml-3"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteTrainee('${t.code}')" class="text-red-400 hover:text-red-300"><i class="fas fa-trash"></i></button>
+                    </td>
+                `;
+                tBody.appendChild(tr);
+            }
+
+            // تحديث الإحصائيات الشاملة
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statPassed').innerText = passed;
+            document.getElementById('statFailed').innerText = failed;
+            document.getElementById('statAvgAttempts').innerText = total > 0 ? (attemptsSum / total).toFixed(1) : '0';
+
+            // بنك الأسئلة المعتمد
+            const aBody = document.getElementById('answersTableBody');
+            aBody.innerHTML = '';
+            questionsData.forEach((q, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-700 hover:bg-gray-800";
+                tr.innerHTML = `
+                    <td class="p-3 border-b border-gray-700 text-center font-bold text-gray-500">${idx + 1}</td>
+                    <td class="p-3 border-b border-gray-700 text-white">${q.q}</td>
+                    <td class="p-3 border-b border-gray-700 text-cyan font-bold">${q.options[q.ans]}</td>
+                `;
+                aBody.appendChild(tr);
+            });
+        }
+
+        // 10. كود الربط السحابي (Fetch API) المجهز لـ GitHub
+        function sendToGoogleSheet(data) {
+            if(!gasUrl) return;
+            // استخدام Fetch API بصيغة no-cors لتجنب حظر المتصفحات للطلبات الخارجية عند الرفع على GitHub Pages
+            fetch(gasUrl, {
+                method: 'POST',
+                mode: 'no-cors', 
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(err => console.log('Google Sheets Sync Pending:', err));
+        }
+
+        // التهيئة وبدء التشغيل
+        window.onload = () => {
+            const saved = localStorage.getItem('gweryaxTrainee');
+            if (saved) {
+                currentTrainee = JSON.parse(saved);
+                document.getElementById('welcomeName').innerText = currentTrainee.name;
+                document.getElementById('mainNav').classList.remove('hidden');
+                navigate('home');
+            } else {
+                navigate('registration');
+            }
+        };
+    </script>
+</body>
+</html>
+
