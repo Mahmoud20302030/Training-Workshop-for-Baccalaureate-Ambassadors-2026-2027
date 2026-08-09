@@ -1,8 +1,22 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- وسوم المشاركة العالمية (Social Media & GitHub Meta Tags) -->
+    <meta property="og:title" content="منصة إعداد سفراء البكالوريا المصرية | GWERYAX">
+    <meta property="og:description" content="الورشة التدريبية الشاملة والمبتكرة لإعداد وتأهيل سفراء البكالوريا المصرية. انطلق في رحلة من الابتكار، التدريب الاحترافي، والاعتماد الرقمي بأحدث المعايير العالمية.">
+    <!-- صورة معبرة واحترافية للتعليم والتكنولوجيا -->
+    <meta property="og:image" content="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop">
+    <meta property="og:url" content="https://your-username.github.io/your-repo-name/">
+    <meta property="og:type" content="website">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="منصة إعداد سفراء البكالوريا المصرية | أ. محمود محمد">
+    <meta name="twitter:description" content="الورشة التدريبية الشاملة والمبتكرة لإعداد وتأهيل سفراء البكالوريا المصرية بأحدث المعايير التقنية والتربوية.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop">
+
     <title>منصة سفراء البكالوريا المصرية - أ. محمود محمد</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -359,6 +373,7 @@
                         </div>
                         <div class="text-center">
                             <p class="mb-4 text-xl">تاريخ التسجيل</p>
+                            <!-- تم ربط هذا الحقل ليتم ملؤه تلقائياً بالتاريخ -->
                             <p id="certDateVal" class="border-b-2 border-black w-40 h-8 mx-auto text-blue-900 font-bold text-xl mt-1"></p>
                         </div>
                     </div>
@@ -887,7 +902,8 @@
             document.getElementById('certScoreVal').innerText = currentTrainee.score + '%';
             document.getElementById('certLevelVal').innerText = currentTrainee.level;
             
-            // ترك التاريخ فارغاً للتدوين اليدوي التزاماً بالمعايير الخاصة بك
+            // إضافة التاريخ تلقائياً كما طلبت
+            document.getElementById('certDateVal').innerText = currentTrainee.date;
         }
 
         // 9. لوحة تحكم الإدارة الشاملة
@@ -1070,4 +1086,3 @@
     </script>
 </body>
 </html>
-
