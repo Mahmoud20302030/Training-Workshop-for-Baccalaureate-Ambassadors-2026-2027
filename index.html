@@ -7,7 +7,6 @@
     <!-- وسوم المشاركة العالمية (Social Media & GitHub Meta Tags) -->
     <meta property="og:title" content="منصة إعداد سفراء البكالوريا المصرية | GWERYAX">
     <meta property="og:description" content="الورشة التدريبية الشاملة والمبتكرة لإعداد وتأهيل سفراء البكالوريا المصرية. انطلق في رحلة من الابتكار، التدريب الاحترافي، والاعتماد الرقمي بأحدث المعايير العالمية.">
-    <!-- صورة معبرة واحترافية للتعليم والتكنولوجيا -->
     <meta property="og:image" content="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop">
     <meta property="og:url" content="https://your-username.github.io/your-repo-name/">
     <meta property="og:type" content="website">
@@ -17,7 +16,9 @@
     <meta name="twitter:description" content="الورشة التدريبية الشاملة والمبتكرة لإعداد وتأهيل سفراء البكالوريا المصرية بأحدث المعايير التقنية والتربوية.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop">
 
-    <title>منصة سفراء البكالوريا المصرية    
+    <!-- تم تصحيح الخطأ هنا بإضافة وسم الإغلاق -->
+    <title>منصة سفراء البكالوريا المصرية</title>
+    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -37,7 +38,14 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            scroll-behavior: smooth;
         }
+
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #010408; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #005cff, #00d2ff); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00d2ff; }
 
         :root {
             --primary-color: #00d2ff;
@@ -55,6 +63,11 @@
         .glass-panel {
             background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px);
             border: 1px solid rgba(0, 210, 255, 0.2); border-radius: 15px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-panel:hover {
+            border-color: rgba(0, 210, 255, 0.4);
+            box-shadow: 0 8px 40px 0 rgba(0, 210, 255, 0.15);
         }
 
         .text-cyan { color: var(--primary-color); }
@@ -65,7 +78,8 @@
             background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
             color: #fff; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 0 15px var(--primary-glow); border: none; cursor: pointer;
         }
-        .btn-cyan:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 25px var(--primary-glow); }
+        .btn-cyan:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 0 30px var(--primary-glow); }
+        .btn-cyan:active:not(:disabled) { transform: translateY(1px); }
         .btn-cyan:disabled { background: #333; box-shadow: none; cursor: not-allowed; color: #888; }
 
         /* إطار ليزر احترافي */
@@ -114,17 +128,17 @@
             width: 100%; padding: 1rem; border-radius: 0.75rem; background: rgba(0, 0, 0, 0.5); color: white;
             border: 1px solid rgba(0, 210, 255, 0.3); transition: all 0.3s;
         }
-        .input-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow); }
+        .input-field:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 10px var(--primary-glow); background: rgba(0, 20, 40, 0.8); }
 
         .progress-container { width: 100%; background: #222; border-radius: 10px; height: 10px; overflow: hidden; margin-top: 1rem; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); width: 0%; transition: width 0.5s ease; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--secondary-color), var(--primary-color)); width: 0%; transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* الشهادة */
         .certificate-container {
             background: #fff; color: #000; padding: 40px; border: 15px solid transparent; border-image: linear-gradient(45deg, #005cff, #00d2ff) 1;
             text-align: center; position: relative; background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="none" stroke="%2300d2ff" stroke-width="1" stroke-dasharray="10 10"/></svg>');
         }
-        .view-section { display: none; animation: fadeIn 0.5s; width: 100%; }
+        .view-section { display: none; animation: fadeIn 0.6s ease-out; width: 100%; }
         .view-section.active { display: block; }
 
         /* الفوتر السيادي الأزرق والسماوي */
@@ -238,7 +252,7 @@
         <!-- قسم الرئيسية والإهداء -->
         <section id="home" class="view-section text-center mt-6">
             <div class="glass-panel p-6 md:p-10 max-w-5xl mx-auto">
-                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2300d2ff'/><text x='50' y='55' font-size='20' text-anchor='middle' fill='%23000' font-weight='bold'>Gweryax</text></svg>" alt="Logo" class="w-24 h-24 mx-auto mb-6">
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%2300d2ff'/><text x='50' y='55' font-size='20' text-anchor='middle' fill='%23000' font-weight='bold'>Gweryax</text></svg>" alt="Logo" class="w-24 h-24 mx-auto mb-6 transform hover:scale-110 transition duration-300">
                 <h1 class="text-4xl md:text-5xl font-black text-cyan mb-4 leading-tight">الورشة التدريبية الشاملة<br>لإعداد سفراء البكالوريا المصرية</h1>
                 <p class="text-xl text-gray-300 mb-10">مرحباً بك أستاذ/ة <strong id="welcomeName" class="text-white border-b border-cyan pb-1"></strong></p>
                 
@@ -267,7 +281,7 @@
                     </p>
                 </div>
 
-                <div class="mt-8 text-right bg-black bg-opacity-60 p-6 rounded-lg text-sm text-gray-300 border border-gray-800">
+                <div class="mt-8 text-right bg-black bg-opacity-60 p-6 rounded-lg text-sm text-gray-300 border border-gray-800 hover:border-cyan transition duration-300">
                     <p class="font-bold text-cyan mb-2">تصميم وتطوير:</p>
                     <p>أ. محمود محمد عبدالوهاب عيسى</p>
                     <p>معلم البرمجة والذكاء الاصطناعي - خبير هندرة العمليات والأمن السيبراني</p>
@@ -294,7 +308,7 @@
 
             <div class="text-center mt-16 hidden" id="quizAccessArea">
                 <div class="inline-block p-1 rounded-full bg-gradient-to-r from-green-400 to-cyan-400 mb-6">
-                    <div class="bg-black rounded-full px-8 py-4">
+                    <div class="bg-black rounded-full px-8 py-4 shadow-lg">
                         <h3 class="text-2xl text-white font-bold"><i class="fas fa-check-circle text-green-400"></i> اكتمل التدريب، أنت جاهز للاختبار.</h3>
                     </div>
                 </div><br>
@@ -322,7 +336,7 @@
 
                 <div class="mt-8 text-left border-t border-gray-700 pt-6">
                     <button id="nextBtn" onclick="nextQuestion()" class="btn-cyan px-10 py-3 rounded-full hidden font-bold text-lg">تأكيد وانتقال <i class="fas fa-chevron-left ml-2"></i></button>
-                    <button id="submitBtn" onclick="submitQuiz()" class="btn-cyan px-10 py-3 rounded-full hidden font-bold bg-red-600 text-lg">إنهاء وعرض النتيجة <i class="fas fa-flag-checkered ml-2"></i></button>
+                    <button id="submitBtn" onclick="submitQuiz()" class="btn-cyan px-10 py-3 rounded-full hidden font-bold bg-red-600 text-lg hover:bg-red-500">إنهاء وعرض النتيجة <i class="fas fa-flag-checkered ml-2"></i></button>
                 </div>
             </div>
         </section>
@@ -331,7 +345,7 @@
         <section id="result" class="view-section mt-10 max-w-5xl mx-auto text-center w-full">
             <div class="glass-panel p-10 mb-8" id="resultPanel">
                 <h2 class="text-4xl text-cyan mb-6 font-bold">تقرير الأداء النهائي</h2>
-                <div class="inline-block p-8 border-4 border-cyan rounded-full mb-6">
+                <div class="inline-block p-8 border-4 border-cyan rounded-full mb-6 shadow-[0_0_20px_var(--primary-glow)]">
                     <div class="text-7xl font-black text-white" id="scoreDisplay">0%</div>
                 </div>
                 <h3 id="levelDisplay" class="text-3xl font-bold mb-4"></h3>
@@ -343,13 +357,13 @@
                     <button onclick="showCertificate()" class="btn-cyan px-12 py-4 rounded-full text-xl shadow-lg">عرض واستخراج الشهادة <i class="fas fa-award mr-2"></i></button>
                 </div>
                 <div id="failActionArea" class="hidden">
-                    <button onclick="resetTraining()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-10 py-3 rounded-full transition">إعادة المحاولة والتدريب</button>
+                    <button onclick="resetTraining()" class="bg-gray-700 hover:bg-gray-600 text-white font-bold px-10 py-3 rounded-full transition shadow-lg">إعادة المحاولة والتدريب</button>
                 </div>
             </div>
 
             <!-- الشهادة -->
             <div id="certificateArea" class="hidden w-full overflow-x-auto pb-8">
-                <div class="certificate-container mx-auto" id="printableCert" style="min-width: 850px; max-width: 950px; padding: 40px;">
+                <div class="certificate-container mx-auto shadow-2xl" id="printableCert" style="min-width: 850px; max-width: 950px; padding: 40px;">
                     <h1 class="text-5xl font-black text-blue-900 mb-4 tracking-widest mt-4">شـهـادة اجـتـيـاز وتـمـيـز</h1>
                     <h3 class="text-2xl text-gray-800 mb-10 font-bold border-b-2 border-gray-400 pb-2 inline-block px-12">توجيه الحاسب الآلي بإدارة ميت غمر التعليمية</h3>
                     
@@ -373,7 +387,6 @@
                         </div>
                         <div class="text-center">
                             <p class="mb-4 text-xl">تاريخ التسجيل</p>
-                            <!-- تم ربط هذا الحقل ليتم ملؤه تلقائياً بالتاريخ -->
                             <p id="certDateVal" class="border-b-2 border-black w-40 h-8 mx-auto text-blue-900 font-bold text-xl mt-1"></p>
                         </div>
                     </div>
