@@ -16,7 +16,6 @@
     <meta name="twitter:description" content="الورشة التدريبية الشاملة والمبتكرة لإعداد وتأهيل سفراء البكالوريا المصرية بأحدث المعايير التقنية والتربوية.">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1200&auto=format&fit=crop">
 
-    <!-- تم تصحيح الخطأ هنا بإضافة وسم الإغلاق -->
     <title>منصة سفراء البكالوريا المصرية</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
@@ -453,11 +452,14 @@
                     </form>
                 </div>
 
-                <!-- سجل المتدربين -->
+                <!-- سجل المتدربين (مع زر الاستدعاء السحابي) -->
                 <div class="glass-panel p-6 overflow-hidden">
-                    <div class="flex justify-between items-center mb-4 border-b border-cyan pb-2">
-                        <h2 class="text-2xl text-cyan font-bold"><i class="fas fa-users"></i> سجل المتدربين (المحلي)</h2>
-                        <button onclick="clearTrainees()" class="text-red-400 hover:text-red-300 font-bold"><i class="fas fa-trash"></i> مسح السجل</button>
+                    <div class="flex justify-between items-center mb-4 border-b border-cyan pb-2 flex-wrap gap-2">
+                        <h2 class="text-2xl text-cyan font-bold"><i class="fas fa-users"></i> سجل المتدربين (سحابي & محلي)</h2>
+                        <div class="flex gap-2">
+                            <button onclick="fetchCloudTrainees()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-1 rounded-lg font-bold transition shadow-lg"><i class="fas fa-cloud-download-alt ml-1"></i> جلب السحابة</button>
+                            <button onclick="clearTrainees()" class="text-red-400 hover:text-red-300 font-bold"><i class="fas fa-trash"></i> مسح المحلي</button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto w-full rounded-lg border border-gray-700">
                         <table class="w-full text-right border-collapse min-w-[900px]">
@@ -470,7 +472,7 @@
                                     <th class="p-3 border-b border-gray-700">الدرجة</th>
                                     <th class="p-3 border-b border-gray-700">المحاولات</th>
                                     <th class="p-3 border-b border-gray-700">الحالة</th>
-                                    <th class="p-3 border-b border-gray-700 text-center">إجراء</th>
+                                    <th class="p-3 border-b border-gray-700 text-center">إجراء / مصدر</th>
                                 </tr>
                             </thead>
                             <tbody id="traineesTableBody" class="text-gray-200 text-sm"></tbody>
@@ -670,13 +672,13 @@
             { q: "30. في الحصة الأولى، من الضروري للمعلم أن:", options: ["يتصرف كصديق لا قواعد له", "يترك الطلاب بلا مهام", "يُرسخ علاقة (معلم وطالب) بوضوح وثبات", "يلغي المنهج"], ans: 2 }
         ];
 
-        // 3. إدارة حالة التطبيق محلياً
+        // 3. إدارة حالة التطبيق محلياً وسحابياً مع تعيين الرابط الافتراضي الجديد
         let currentTrainee = null;
         let unlockedUnit = parseInt(localStorage.getItem('gweryaxUnlocked')) || 0; 
         let currentQ = 0;
         let score = 0;
         let selectedAnswers = new Array(30).fill(null);
-        let gasUrl = localStorage.getItem('gweryaxGasUrl') || '';
+        let gasUrl = localStorage.getItem('gweryaxGasUrl') || 'https://script.google.com/macros/s/AKfycbzitXwausNokW8QqkzOvdlUdl7T4CMymq0rk9MZU64QlwymilqOMCFAdikbRNW7EsRx/exec';
 
         // 4. وظائف التنقل والشاشات
         function navigate(viewId) {
@@ -701,7 +703,7 @@
         }
         function closeAlertModal() { document.getElementById('alertModal').classList.remove('active'); }
 
-        // 5. التسجيل الإلزامي
+        // 5. التسجيل الإلزامي (مع الحفظ التلقائي للسحابة فور التسجيل)
         function handleRegistration(e) {
             e.preventDefault();
             const code = document.getElementById('regCode').value.trim();
@@ -723,6 +725,7 @@
             document.getElementById('mainNav').classList.remove('hidden');
             
             saveToDatabase(currentTrainee);
+            sendToGoogleSheet(currentTrainee); // حفظ تلقائي في Google Sheets فور بدء الرحلة
             navigate('home');
         }
 
@@ -882,7 +885,7 @@
             
             localStorage.setItem('gweryaxTrainee', JSON.stringify(currentTrainee));
             saveToDatabase(currentTrainee);
-            sendToGoogleSheet(currentTrainee);
+            sendToGoogleSheet(currentTrainee); // حفظ تلقائي للنتيجة عبر السحابة
 
             document.getElementById('scoreDisplay').innerText = `${percent}%`;
             const lvlDisp = document.getElementById('levelDisplay');
@@ -915,14 +918,13 @@
             document.getElementById('certScoreVal').innerText = currentTrainee.score + '%';
             document.getElementById('certLevelVal').innerText = currentTrainee.level;
             
-            // إضافة التاريخ تلقائياً كما طلبت
             document.getElementById('certDateVal').innerText = currentTrainee.date;
         }
 
         // 9. لوحة تحكم الإدارة الشاملة
         function checkAdmin() {
             const pass = document.getElementById('adminPass').value;
-            if (pass === 'Thanksmrmahmoud2030') {
+            if (pass === 'Thanksmrmahmoud2027') {
                 document.getElementById('loginArea').classList.add('hidden');
                 document.getElementById('adminDashboard').classList.remove('hidden');
                 document.getElementById('gasUrlInput').value = gasUrl;
@@ -1044,6 +1046,7 @@
                     <td class="p-3 border-b border-gray-700 font-bold">${t.attempts || 0}</td>
                     <td class="p-3 border-b border-gray-700 font-bold ${color}">${t.status}</td>
                     <td class="p-3 border-b border-gray-700 text-center">
+                        <span class="text-gray-400 text-xs ml-2">محلي</span>
                         <button onclick="editTrainee('${t.code}')" class="text-yellow-400 hover:text-yellow-300 ml-3"><i class="fas fa-edit"></i></button>
                         <button onclick="deleteTrainee('${t.code}')" class="text-red-400 hover:text-red-300"><i class="fas fa-trash"></i></button>
                     </td>
@@ -1051,13 +1054,11 @@
                 tBody.appendChild(tr);
             }
 
-            // تحديث الإحصائيات الشاملة
             document.getElementById('statTotal').innerText = total;
             document.getElementById('statPassed').innerText = passed;
             document.getElementById('statFailed').innerText = failed;
             document.getElementById('statAvgAttempts').innerText = total > 0 ? (attemptsSum / total).toFixed(1) : '0';
 
-            // بنك الأسئلة المعتمد
             const aBody = document.getElementById('answersTableBody');
             aBody.innerHTML = '';
             questionsData.forEach((q, idx) => {
@@ -1072,10 +1073,65 @@
             });
         }
 
+        // دالة جلب بيانات المتدربين من Google Sheets وعرضها في الجدول
+        async function fetchCloudTrainees() {
+            if (!gasUrl) {
+                showAlert('تنبيه', 'رابط Google Apps Script غير متوفر.');
+                return;
+            }
+
+            const tBody = document.getElementById('traineesTableBody');
+            tBody.innerHTML = '<tr><td colspan="8" class="text-center p-6 text-cyan font-bold">جاري الاتصال بالسحابة وجلب بيانات المتدربين... <i class="fas fa-spinner fa-spin ml-2"></i></td></tr>';
+
+            try {
+                const response = await fetch(gasUrl);
+                const cloudData = await response.json();
+
+                tBody.innerHTML = '';
+                let total = 0, passed = 0, failed = 0, attemptsSum = 0;
+
+                cloudData.forEach(t => {
+                    total++;
+                    const statusStr = t.status || t['الحالة'] || (parseInt(t.score || t['الدرجة'] || 0) >= 70 ? 'مجتاز' : 'لم يجتز');
+                    if (statusStr === 'مجتاز') passed++;
+                    else failed++;
+
+                    const attemptsNum = parseInt(t.attempts || t['المحاولات'] || 1);
+                    attemptsSum += attemptsNum;
+
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-gray-700 hover:bg-gray-800 transition";
+                    const color = statusStr === 'مجتاز' ? 'text-green-400' : (statusStr === 'لم يجتز' ? 'text-red-400' : 'text-yellow-400');
+                    
+                    tr.innerHTML = `
+                        <td class="p-3 border-b border-gray-700">${t.date || t['التاريخ'] || '-'}</td>
+                        <td class="p-3 border-b border-gray-700 text-cyan font-bold">${t.code || t['الكود'] || '-'}</td>
+                        <td class="p-3 border-b border-gray-700">${t.name || t['الاسم'] || '-'}</td>
+                        <td class="p-3 border-b border-gray-700">${t.school || t['المدرسة'] || '-'}</td>
+                        <td class="p-3 border-b border-gray-700 font-bold">${t.score || t['الدرجة'] || '0'}%</td>
+                        <td class="p-3 border-b border-gray-700 font-bold">${attemptsNum}</td>
+                        <td class="p-3 border-b border-gray-700 font-bold ${color}">${statusStr}</td>
+                        <td class="p-3 border-b border-gray-700 text-center"><span class="text-blue-400 font-bold">سحابي</span></td>
+                    `;
+                    tBody.appendChild(tr);
+                });
+
+                document.getElementById('statTotal').innerText = total;
+                document.getElementById('statPassed').innerText = passed;
+                document.getElementById('statFailed').innerText = failed;
+                document.getElementById('statAvgAttempts').innerText = total > 0 ? (attemptsSum / total).toFixed(1) : '0';
+
+                showAlert('تم بنجاح', 'تم استدعاء بيانات جميع المتدربين من Google Sheets بنجاح.');
+            } catch (error) {
+                console.error('Error fetching from GAS:', error);
+                showAlert('خطأ في الاتصال', 'تعذر جلب البيانات سحابياً، سيتم عرض البيانات المحلية.');
+                populateAdmin();
+            }
+        }
+
         // 10. كود الربط السحابي (Fetch API) المجهز لـ GitHub
         function sendToGoogleSheet(data) {
             if(!gasUrl) return;
-            // استخدام Fetch API بصيغة no-cors لتجنب حظر المتصفحات للطلبات الخارجية عند الرفع على GitHub Pages
             fetch(gasUrl, {
                 method: 'POST',
                 mode: 'no-cors', 
